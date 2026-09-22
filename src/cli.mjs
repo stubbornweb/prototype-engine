@@ -51,7 +51,7 @@ function newPrototype(slugInput, brief, shell = "undecided") {
   mkdirSync(join(dir, "public"), { recursive: true });
   mkdirSync(join(dir, "qa"), { recursive: true });
 
-  const spec = `# ${slug}\n\n## Brief\n${brief}\n\n## Experience decision\n\n- Visual mode: undecided\n- Hero: undecided\n- Shell: ${shell} (count interactive sections first — docs/stack-policy.md §1)\n- Interactive sections: TBD\n- 3D: optional\n- Video: optional\n- Motion: cinematic but purposeful\n- Mobile fallback: required\n\n## Quality target\n\nPrototype mode: fast, polished, demo-ready.\n\nClient promotion requires the production gate in \\.claude/skills/web-production/SKILL.md.\n`;
+  const spec = `# ${slug}\n\n## Brief\n${brief}\n\n## Customer contract (docs/customer-first.md §1 — fill before visuals)\n\n- Visitor: TBD\n- Their question: TBD\n- Offer: TBD\n- Outcome: TBD\n- Proof: TBD\n- Primary action: TBD\n- Business metric: TBD\n\n## Experience decision\n\n- Visual mode: undecided\n- Hero: undecided\n- Shell: ${shell} (count interactive sections first — docs/stack-policy.md §1)\n- Interactive sections: TBD\n- 3D: optional\n- Video: optional\n- Motion: purposeful — one attention-grabber per viewport\n- Effect budget: list each effect + the customer job it does\n- Mobile fallback: required\n\n## Quality target\n\nPrototype mode: fast, polished, demo-ready — and passes the five-second rule and performance budget in docs/customer-first.md.\n\nClient promotion requires the production gate in \\.claude/skills/web-production/SKILL.md.\n`;
 
   writeFileSync(join(dir, "EXPERIENCE.md"), spec);
   writeFileSync(join(dir, "prototype.yaml"), `name: ${slug}\nbrief: ${JSON.stringify(brief)}\nstatus: prototype\nvisual_mode: undecided\nhero: undecided\nstack:\n  shell: ${shell}\n  styling: tailwind-latest-major\n  motion: motion\n  three: optional\n  cms: optional\n  backend: optional\n`);
@@ -62,15 +62,18 @@ function newPrototype(slugInput, brief, shell = "undecided") {
   if (shell === "astro" && existsSync(template)) {
     cpSync(template, join(dir, "site"), { recursive: true });
   }
-  writeFileSync(join(dir, "qa/CHECKLIST.md"), "# Prototype QA\n\n- [ ] Desktop composition\n- [ ] Mobile composition\n- [ ] Motion timing\n- [ ] CTA clarity\n- [ ] No console errors\n- [ ] Reduced-motion fallback\n- [ ] Performance sanity check\n");
+  writeFileSync(join(dir, "qa/CHECKLIST.md"), "# Prototype QA\n\n- [ ] Five-second rule passes on 390px (offer, who, outcome, next action)\n- [ ] H1 names the offer/outcome; primary CTA visible without scrolling\n- [ ] Proof sits next to the ask\n- [ ] Every effect has a customer job in EXPERIENCE.md\n- [ ] Mobile LCP within budget; H1/CTA not hidden behind entrance animation\n- [ ] Native scroll + keyboard navigation intact\n- [ ] Reduced-motion covers all motion, not just CSS\n- [ ] Desktop composition still distinctive\n- [ ] Mobile composition\n- [ ] No console errors\n");
   console.log(`Created ${dir}`);
 }
 
-function stackPolicy() {
-  const file = join(engineRoot(), "docs", "stack-policy.md");
-  if (!existsSync(file)) throw new Error(`Missing stack policy: ${file}`);
+function readDoc(name) {
+  const file = join(engineRoot(), "docs", name);
+  if (!existsSync(file)) throw new Error(`Missing engine doc: ${file}`);
   return readFileSync(file, "utf8");
 }
+
+const stackPolicy = () => readDoc("stack-policy.md");
+const customerFirst = () => readDoc("customer-first.md");
 
 function buildPrompt(slugInput) {
   const slug = slugify(slugInput);
@@ -78,7 +81,7 @@ function buildPrompt(slugInput) {
   if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
   const spec = readFileSync(join(dir, "EXPERIENCE.md"), "utf8");
   const patterns = listPatterns(engineRoot());
-  return `You are the Prototype Engine orchestrator.\n\nGoal: turn the prototype brief into a polished, visually distinctive web experience quickly.\n\nRules:\n- Follow the stack policy below exactly. It is authoritative; do not substitute remembered defaults.\n- Prefer reusable patterns over inventing infrastructure.\n- Keep prototype mode lightweight; do not over-engineer.\n- Verify the result in a browser before declaring done.\n\n--- BEGIN STACK POLICY ---\n${stackPolicy()}\n--- END STACK POLICY ---\n\nExperience spec:\n${spec}\n\nAvailable local patterns:\n${patterns}\n\nExecution:\n1. Choose one coherent visual direction.\n2. Count the interactive sections and record the shell choice in EXPERIENCE.md.\n3. Pick only the patterns needed.\n4. Build the page.\n5. Run the local app.\n6. Inspect desktop and mobile in a real browser.\n7. Fix the most visible problems.\n8. Leave a short note in qa/RESULT.md.\n9. Stop when it is polished enough to demo; do not gold-plate.\n`;
+  return `You are the Prototype Engine orchestrator.\n\nGoal: turn the prototype brief into a polished, distinctive web experience that helps the client's customers understand, trust, and act — quickly.\n\nRules:\n- Design for the customer, not for other designers. Follow the customer-first principles below; they outrank visual ambition.\n- Follow the stack policy below exactly. It is authoritative; do not substitute remembered defaults.\n- Prefer reusable patterns over inventing infrastructure.\n- Keep prototype mode lightweight; do not over-engineer.\n- Verify the result in a browser before declaring done.\n\n--- BEGIN STACK POLICY ---\n${stackPolicy()}\n--- END STACK POLICY ---\n\n--- BEGIN CUSTOMER-FIRST PRINCIPLES ---\n${customerFirst()}\n--- END CUSTOMER-FIRST PRINCIPLES ---\n\nExperience spec:\n${spec}\n\nAvailable local patterns:\n${patterns}\n\nExecution:\n1. Fill the customer contract in EXPERIENCE.md (state assumptions if the brief is silent).\n2. Choose one coherent visual direction that serves it.\n3. Count the interactive sections and record the shell choice in EXPERIENCE.md.\n4. Pick only the patterns needed; record each effect's customer job.\n5. Build the page.\n6. Run the local app.\n7. Inspect mobile first, then desktop, in a real browser; run the five-second rule and check mobile LCP.\n8. Fix the biggest clarity/speed problems, then the most visible visual ones.\n9. Leave a short note in qa/RESULT.md.\n10. Stop when it is polished enough to demo; do not gold-plate.\n`;
 }
 
 function listPatterns(root) {
@@ -112,7 +115,7 @@ function review(slugInput) {
   if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
   const resultPath = join(dir, "qa/RESULT.md");
   const existing = existsSync(resultPath) ? readFileSync(resultPath, "utf8") : "";
-  const content = `# Visual QA\n\nGenerated: ${new Date().toISOString()}\n\n## Checklist\n\n- [ ] Desktop screenshot reviewed\n- [ ] Mobile screenshot reviewed\n- [ ] Hero hierarchy is clear\n- [ ] Motion is purposeful\n- [ ] 3D/video does not overpower content\n- [ ] CTA is discoverable\n- [ ] No visible overflow\n- [ ] Reduced-motion fallback exists\n- [ ] Console is clean\n- [ ] Asset sizes are reasonable\n\n${existing}`;
+  const content = `# Visual QA\n\nGenerated: ${new Date().toISOString()}\n\n## Checklist\n\n- [ ] Desktop screenshot reviewed\n- [ ] Mobile screenshot reviewed\n- [ ] Five-second rule passes on mobile\n- [ ] Hero hierarchy is clear\n- [ ] Mobile LCP within budget\n- [ ] Native scroll + keyboard intact\n- [ ] Motion is purposeful\n- [ ] 3D/video does not overpower content\n- [ ] CTA is discoverable\n- [ ] No visible overflow\n- [ ] Reduced-motion fallback exists\n- [ ] Console is clean\n- [ ] Asset sizes are reasonable\n\n${existing}`;
   writeFileSync(resultPath, content);
   console.log(`QA checklist refreshed: ${resultPath}`);
 }
