@@ -1,0 +1,13 @@
+{
+  "name": "prototype-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fast AI-assisted web experience prototype engine for Claude Code.",
+  "type": "module",
+  "bin": {
+    "prototype-engine": "src/cli.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

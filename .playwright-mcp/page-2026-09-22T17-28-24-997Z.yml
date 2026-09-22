@@ -1,0 +1,287 @@
+- main [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "Yevhenii" [ref=e7] [cursor=pointer]:
+          - /url: "#top"
+        - generic [ref=e23]:
+          - link "Services" [ref=e24] [cursor=pointer]:
+            - /url: "#services"
+          - link "Process" [ref=e25] [cursor=pointer]:
+            - /url: "#process"
+          - link "Work" [ref=e26] [cursor=pointer]:
+            - /url: "#work"
+          - link "About" [ref=e27] [cursor=pointer]:
+            - /url: "#about"
+      - generic [ref=e28]:
+        - link "Email me" [ref=e29] [cursor=pointer]:
+          - /url: "#contact"
+        - link "Book a call" [ref=e30] [cursor=pointer]:
+          - /url: https://cal.com/yevhenii/intro
+  - generic [ref=e34]:
+    - paragraph [ref=e35]: Software that earns its keep
+    - heading "Built to Last" [level=1] [ref=e36]
+    - paragraph [ref=e37]: Full-stack builds, backend systems, integrations, automation and applied AI — delivered by one senior engineer who stays accountable after launch.
+    - generic [ref=e38]:
+      - link "Book an intro call" [ref=e39] [cursor=pointer]:
+        - /url: https://cal.com/yevhenii/intro
+      - link "See what I do" [ref=e44] [cursor=pointer]:
+        - /url: "#services"
+    - paragraph [ref=e47]:
+      - generic [ref=e48]: Taking one new project this quarter
+      - generic [ref=e52]: ·
+      - generic [ref=e53]: Remote · CET
+      - generic [ref=e54]: ·
+      - generic [ref=e55]: Replies within one business day
+  - generic [ref=e57]:
+    - generic [ref=e58]:
+      - generic [ref=e59]: Where I usually come in
+      - heading "Most people arrive with one of these four." [level=2] [ref=e62]
+      - paragraph [ref=e63]: If any of them sounds like your week, the call is worth thirty minutes. Read the right-hand column for what I'd actually do about it.
+    - list [ref=e65]:
+      - listitem [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: "01"
+            - heading "The build stalled six weeks ago." [level=3] [ref=e70]
+          - generic [ref=e71]:
+            - paragraph [ref=e72]: Every week it sits unshipped, the market moves and the estimate ages.
+            - paragraph [ref=e73]:
+              - generic [ref=e75]: I take over the codebase, cut what isn't load-bearing, and get you to a deployed version people can use.
+      - listitem [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: "02"
+            - heading "Three tools, four spreadsheets, one person holding it together." [level=3] [ref=e80]
+          - generic [ref=e81]:
+            - paragraph [ref=e82]: The glue work is invisible until that person is on holiday.
+            - paragraph [ref=e83]:
+              - generic [ref=e85]: I map the actual flow, then replace the manual steps with integrations that don't need a babysitter.
+      - listitem [ref=e86]:
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e89]: "03"
+            - heading "Everyone says you should be using AI. Nobody says where." [level=3] [ref=e90]
+          - generic [ref=e91]:
+            - paragraph [ref=e92]: You either overspend on a tool that solves nothing, or you wait and lose the margin.
+            - paragraph [ref=e93]:
+              - generic [ref=e95]: "A short research pass on your real workflows, then a recommendation: buy it, wire it up, or build it."
+      - listitem [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: "04"
+            - heading "The backend works, but nobody wants to touch it." [level=3] [ref=e100]
+          - generic [ref=e101]:
+            - paragraph [ref=e102]: Every new feature is quoted at three times what it should cost.
+            - paragraph [ref=e103]:
+              - generic [ref=e105]: Targeted refactor with tests around the risky parts. Same behaviour, half the fear.
+  - generic [ref=e107]:
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - generic [ref=e110]: What you can ask me for
+        - heading "Seven things people hire me to do — and one of them is just advice." [level=2] [ref=e113]
+      - paragraph [ref=e114]: Not sure which box you're in? That's normal. Describe the symptom and I'll tell you which of these it actually is — or that you don't need me.
+    - generic [ref=e115]:
+      - article [ref=e116]:
+        - generic [ref=e117]: 4–10 weeks
+        - heading "Product engineering, end to end" [level=3] [ref=e124]
+        - paragraph [ref=e125]: Design-aware frontend, a backend that holds up, and a deploy pipeline you can run without me.
+        - list [ref=e126]:
+          - listitem [ref=e127]: React / Next.js / Astro frontends
+          - listitem [ref=e130]: Node, Laravel or Python services
+          - listitem [ref=e133]: Postgres schema design and migrations
+          - listitem [ref=e136]: CI, previews, and production deploys
+      - article [ref=e139]:
+        - generic [ref=e140]: 3–8 weeks
+        - heading "Backend, CMS & CRM systems" [level=3] [ref=e147]
+        - paragraph [ref=e148]: The unglamorous layer that decides whether the rest of the company can move.
+        - list [ref=e149]:
+          - listitem [ref=e150]: Payload / Strapi / custom CMS
+          - listitem [ref=e153]: CRM data models and pipelines
+          - listitem [ref=e156]: Role-based auth and permissions
+          - listitem [ref=e159]: Queues, jobs, and scheduled work
+      - article [ref=e162]:
+        - generic [ref=e163]: 1–4 weeks
+        - heading "Integrations with the tools you already pay for" [level=3] [ref=e172]
+        - paragraph [ref=e173]: Stripe, HubSpot, Slack, ERPs, shipping APIs, whatever the finance team lives in.
+        - list [ref=e174]:
+          - listitem [ref=e175]: REST / GraphQL / webhook plumbing
+          - listitem [ref=e178]: Retries, idempotency, and audit trails
+          - listitem [ref=e181]: Data sync between systems of record
+          - listitem [ref=e184]: Internal APIs your team can call
+      - article [ref=e187]:
+        - generic [ref=e188]: 2–5 weeks
+        - heading "Automation & process analysis" [level=3] [ref=e195]
+        - paragraph [ref=e196]: First I watch how the work actually happens. Then I delete the parts a machine should do.
+        - list [ref=e197]:
+          - listitem [ref=e198]: Workflow mapping with your operators
+          - listitem [ref=e201]: Cost-per-step analysis
+          - listitem [ref=e204]: Automation build-out and handover
+          - listitem [ref=e207]: Before / after time measurement
+      - article [ref=e210]:
+        - generic [ref=e211]: 2–6 weeks
+        - heading "Applied AI — research, then build" [level=3] [ref=e216]
+        - paragraph [ref=e217]: No model worship. A written recommendation on where AI pays for itself in your business, and a tool if one is warranted.
+        - list [ref=e218]:
+          - listitem [ref=e219]: Opportunity research and scoring
+          - listitem [ref=e222]: Vendor vs. build evaluation
+          - listitem [ref=e225]: Custom agents, RAG, and internal copilots
+          - listitem [ref=e228]: Evaluation harnesses so quality is measurable
+      - article [ref=e231]:
+        - generic [ref=e232]: 3–6 weeks
+        - heading "3D & interactive web experiences" [level=3] [ref=e238]
+        - paragraph [ref=e239]: Three.js and R3F when the product genuinely benefits — configurators, spatial demos, launch moments.
+        - list [ref=e240]:
+          - listitem [ref=e241]: Product configurators
+          - listitem [ref=e244]: Scroll-driven 3D storytelling
+          - listitem [ref=e247]: Performance budgets and mobile fallbacks
+          - listitem [ref=e250]: Asset pipeline from your 3D team
+      - article [ref=e253]:
+        - generic [ref=e254]: From 1 call
+        - heading "Advisory — just tell me what you'd do" [level=3] [ref=e260]
+        - paragraph [ref=e261]: Sometimes you don't need a build. You need one senior opinion before you commit a quarter to something.
+        - list [ref=e262]:
+          - listitem [ref=e263]: Architecture and stack review
+          - listitem [ref=e266]: Hiring vs. outsourcing calls
+          - listitem [ref=e269]: Second opinion on a vendor quote
+          - listitem [ref=e272]: Written summary you can forward
+    - generic [ref=e275]:
+      - paragraph [ref=e276]: "Everything above starts the same way: one call, then a written plan with a number on it."
+      - link "Book the call →" [ref=e277] [cursor=pointer]:
+        - /url: https://cal.com/yevhenii/intro
+        - text: Book the call
+        - generic [ref=e278]: →
+  - generic [ref=e280]:
+    - generic [ref=e281]:
+      - generic [ref=e282]: How working together goes
+      - heading "No black boxes. Four steps, all visible." [level=2] [ref=e285]
+      - paragraph [ref=e286]: The fastest way to lose trust is to disappear for three weeks. This is the rhythm I hold to, on every engagement, regardless of size.
+    - list [ref=e289]:
+      - listitem [ref=e290]:
+        - generic [ref=e291]: "01"
+        - heading "A call, not a pitch" [level=3] [ref=e292]
+        - paragraph [ref=e293]: Thirty minutes. You describe the problem, I ask the annoying questions. If I'm not the right person you'll hear that on the call, with a suggestion of who is.
+      - listitem [ref=e294]:
+        - generic [ref=e295]: "02"
+        - heading "A written plan with a number on it" [level=3] [ref=e296]
+        - paragraph [ref=e297]: Scope, sequence, risks, and a fixed price or a clear rate. You get it in writing before anything is committed. No hourly surprises.
+      - listitem [ref=e298]:
+        - generic [ref=e299]: "03"
+        - heading "Weekly working software" [level=3] [ref=e300]
+        - paragraph [ref=e301]: Every week there is something running on a URL you can open. Progress is visible, not reported. If priorities change, we change them in the open.
+      - listitem [ref=e302]:
+        - generic [ref=e303]: "04"
+        - heading "Handover you could survive without me" [level=3] [ref=e304]
+        - paragraph [ref=e305]: Documented, tested, deployed under your accounts. A walkthrough recording for the team. You are never hostage to the person who built it.
+  - generic [ref=e312]:
+    - paragraph [ref=e313]: “You are not buying hours. You are buying the confidence that the thing will work on the Monday after I leave.”
+    - paragraph [ref=e314]: Yevhenii — Full-stack engineer
+    - generic [ref=e315]:
+      - generic [ref=e316]:
+        - heading "One senior person, start to finish" [level=3] [ref=e317]
+        - paragraph [ref=e318]: You talk to the person writing the code. Nothing gets translated through an account manager, and nothing quietly moves to a junior.
+      - generic [ref=e319]:
+        - heading "Estimates in writing, or not at all" [level=3] [ref=e320]
+        - paragraph [ref=e321]: If I can't scope it confidently, I'll say so and propose a small paid discovery instead of guessing at your expense.
+      - generic [ref=e322]:
+        - heading "Your accounts, your repository" [level=3] [ref=e323]
+        - paragraph [ref=e324]: Infrastructure lives under your organisation from day one. Handover is a formality, not a negotiation.
+  - generic [ref=e326]:
+    - generic [ref=e327]:
+      - generic [ref=e328]:
+        - generic [ref=e329]: Selected work
+        - heading "Outcomes first. Screenshots second." [level=2] [ref=e332]
+      - paragraph [ref=e333]: Full write-ups are being prepared with each client's permission. Ask on the call and I'll walk you through the relevant one in detail.
+    - generic [ref=e334]:
+      - article [ref=e335]:
+        - generic [ref=e336]: Write-up in progress
+        - generic [ref=e340]:
+          - heading "Operations platform for a logistics team" [level=3] [ref=e341]
+          - paragraph [ref=e342]: Manual dispatch time cut from 40 min to 6 min per load
+          - generic [ref=e343]:
+            - generic [ref=e344]: Laravel
+            - generic [ref=e345]: Postgres
+            - generic [ref=e346]: Integrations
+      - article [ref=e347]:
+        - generic [ref=e348]: Write-up in progress
+        - generic [ref=e352]:
+          - heading "Headless commerce rebuild" [level=3] [ref=e353]
+          - paragraph [ref=e354]: LCP 4.1s → 1.2s, organic sessions +38% in two quarters
+          - generic [ref=e355]:
+            - generic [ref=e356]: Next.js
+            - generic [ref=e357]: Payload CMS
+            - generic [ref=e358]: Performance
+      - article [ref=e359]:
+        - generic [ref=e360]: Write-up in progress
+        - generic [ref=e364]:
+          - heading "Internal AI assistant for a support team" [level=3] [ref=e365]
+          - paragraph [ref=e366]: First-response time halved, with an eval suite to keep it honest
+          - generic [ref=e367]:
+            - generic [ref=e368]: Applied AI
+            - generic [ref=e369]: RAG
+            - generic [ref=e370]: Evals
+    - link [ref=e371] [cursor=pointer]:
+      - /url: https://cal.com/yevhenii/intro
+      - generic [ref=e372]:
+        - heading "Your project, in this row" [level=3] [ref=e373]
+        - paragraph [ref=e374]: One slot opens this quarter. Tell me what you're building.
+  - generic [ref=e380]:
+    - generic [ref=e381]:
+      - generic [ref=e382]: Start here
+      - heading "Tell me the problem. I'll tell you what I'd do." [level=2] [ref=e385]
+      - paragraph [ref=e386]: You don't need a spec, a budget, or a decision. A paragraph describing the mess is enough to start — and if I'm the wrong person, I'll say so and point you somewhere better.
+      - generic [ref=e387]:
+        - link "Book a 30-minute intro call" [ref=e388] [cursor=pointer]:
+          - /url: https://cal.com/yevhenii/intro
+        - link "hello@yevhenii.dev" [ref=e394] [cursor=pointer]:
+          - /url: mailto:hello@yevhenii.dev
+      - generic [ref=e401]:
+        - heading "Before you ask" [level=3] [ref=e402]
+        - generic [ref=e403]:
+          - button "What does an engagement usually cost?" [expanded] [ref=e404]
+          - paragraph [ref=e409]: Most projects land between a two-week fixed-scope sprint and a three-month build. You get a number in writing after the first call — before you commit to anything.
+        - button "Can you work with our existing team?" [ref=e411]
+        - button "What if we're not sure what we need yet?" [ref=e416]
+        - button "Do you take over half-finished projects?" [ref=e421]
+    - generic [ref=e426]:
+      - generic [ref=e427]:
+        - generic [ref=e428]:
+          - generic [ref=e429]: Name
+          - textbox "Name" [ref=e430]:
+            - /placeholder: Alex Moreau
+        - generic [ref=e431]:
+          - generic [ref=e432]: Email
+          - textbox "Email" [ref=e433]:
+            - /placeholder: alex@company.com
+      - generic [ref=e434]:
+        - generic [ref=e435]: What's this about
+        - combobox "What's this about" [ref=e436]:
+          - option "Pick the closest one" [disabled] [selected]
+          - option "Product engineering, end to end"
+          - option "Backend, CMS & CRM systems"
+          - option "Integrations with the tools you already pay for"
+          - option "Automation & process analysis"
+          - option "Applied AI — research, then build"
+          - option "3D & interactive web experiences"
+          - option "Advisory — just tell me what you'd do"
+          - option "Something else entirely"
+      - generic [ref=e437]:
+        - generic [ref=e438]: The situation
+        - textbox "The situation" [ref=e439]:
+          - /placeholder: We have a Laravel app three developers have touched, nobody wants to add features to it, and we need a customer portal by March…
+      - button "Send it" [ref=e440]
+      - paragraph [ref=e443]: No mailing list, no CRM sequence. It goes straight to my inbox.
+  - generic [ref=e445]:
+    - generic [ref=e446]: Yevhenii — Full-stack engineer
+    - navigation [ref=e462]:
+      - link "Services" [ref=e463] [cursor=pointer]:
+        - /url: "#services"
+      - link "Process" [ref=e464] [cursor=pointer]:
+        - /url: "#process"
+      - link "Work" [ref=e465] [cursor=pointer]:
+        - /url: "#work"
+      - link "About" [ref=e466] [cursor=pointer]:
+        - /url: "#about"
+      - link "hello@yevhenii.dev" [ref=e467] [cursor=pointer]:
+        - /url: mailto:hello@yevhenii.dev
+    - paragraph [ref=e468]: Remote · CET · © 2026

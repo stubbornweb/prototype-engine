@@ -1,0 +1,12 @@
+name: demo-studio
+brief: "A dark cinematic portfolio for a premium architecture studio with an interactive 3D hero and restrained motion."
+status: prototype
+visual_mode: undecided
+hero: undecided
+stack:
+  frontend: astro
+  interactive: react
+  motion: motion
+  three: optional
+  cms: optional
+  backend: optional

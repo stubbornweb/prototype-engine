@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.idea/
+.vs_code/
+.env*
+.DS_Store
+.vercel/
+prototypes/*
+!prototypes/demo-studio/
+
+
