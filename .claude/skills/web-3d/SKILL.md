@@ -5,7 +5,7 @@ description: Build purposeful interactive 3D scenes using Three.js and React Thr
 
 # Web 3D
 
-Use Three.js / React Three Fiber only when 3D materially improves the concept.
+Use Three.js / React Three Fiber only when 3D shows the customer something words and images cannot — a product they can turn, a configuration they can try. Ambient 3D that only drifts is peer-bait; use video or a still.
 
 Prefer:
 - reusable R3F components
@@ -14,4 +14,4 @@ Prefer:
 - lazy loading and static/mobile fallbacks
 - restrained post-processing
 
-Always consider GPU cost, touch interaction, loading behavior, and reduced-motion fallback.
+Lazy-load the 3D bundle after the H1/CTA paint; the page must persuade without it. Always consider GPU cost on a mid-range phone, touch interaction, loading behavior, and reduced-motion fallback.
