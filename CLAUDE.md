@@ -3,7 +3,9 @@
 This repository is an AI-assisted rapid web experience factory.
 
 ## Primary objective
-Build a visually distinctive, demo-ready website prototype quickly. Prefer a strong visual idea and a small number of excellent interactions over a large feature set.
+Build a demo-ready website prototype quickly that helps the client sell: visitors understand the offer, trust it, and act. It must look modern and distinctive — but we design for the client's customers, not for other designers. Prefer a strong visual idea and a small number of excellent, purposeful interactions over a large feature set.
+
+See **[docs/customer-first.md](docs/customer-first.md)** — the second source of truth, also injected into every build prompt. When visual ambition conflicts with clarity, speed, or native browser behaviour, customer-first wins.
 
 ## Operating modes
 
