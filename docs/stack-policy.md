@@ -19,8 +19,9 @@ choreography, form state, video players, 3D, carousels.
 | A handful, rest is prose | **Astro** + React islands | Ships near-zero JS for the static majority |
 | Genuinely static | **Astro**, no islands | |
 
-**Default to React + Vite.** This engine exists to produce motion-heavy
-marketing pages, and in that class of work nearly every section animates. When
+**Default to React + Vite.** This engine produces interactive marketing
+pages, and in that class of work most sections carry some client JS.
+(How much motion is warranted is decided by `docs/customer-first.md`, not here.) When
 that is true, Astro's island boundaries become per-section overhead — you write
 the `.astro` wrapper, the `.jsx` island, *and* the `client:` directive decision,
 then debug the ones that silently didn't hydrate. Those debug round-trips are
@@ -61,11 +62,21 @@ caret range (`^4.1.0`) and record what was actually installed in
 
 - CSS transitions first. **Motion** for ordinary UI animation.
 - **GSAP** only for genuinely timeline-heavy scroll choreography.
-- **Three.js / R3F** only when the object must respond to user input. A canvas
+- **Three.js / R3F** only when the object must respond to user input, and
+  lazy-loaded after the H1/CTA paint. A canvas
   2D field or a video loop beats a WebGL scene that only drifts.
 - **Generated video** when the motion is passive and cinematic — cheaper and
   more reliable than realtime rendering for atmosphere.
-- Hero video must be **H.264 MP4**, audio stripped, with a poster extracted
+- **Background loops are progressive MP4, not HLS.** HLS (`.m3u8`) is for
+  long-form, user-started, or adaptive-bitrate video; for a short muted loop it
+  adds a manifest round-trip, segment requests, a player library, and loop
+  seams. Ship **AV1 MP4 first** (≈ ¼ the bytes) with an **H.264 MP4 fallback**,
+  chosen in JS via `canPlayType` so nothing downloads under reduced motion or
+  Save-Data. Reference: `prototypes/portfolio-studio/src/lib/useVideoSource.js`.
+- For a loop whose last frame doesn't match its first, bake a **ping-pong**
+  (forward + reversed, turnaround duplicates trimmed) into the file with
+  ffmpeg — never reverse in the browser.
+- The H.264 fallback must be **H.264**, audio stripped, with a poster extracted
   from frame 1 of the loop. HEVC/`hvc1` will not decode in most browsers and
   fails silently by showing the poster — check `videoWidth > 0` in the browser,
   not just that the file plays locally.
