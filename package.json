@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "description": "Fast AI-assisted web experience prototype engine for Claude Code.",
-  "type": "module",
   "bin": {
-    "prototype-engine": "src/cli.mjs"
+    "prototype-engine": "src/cli.ts"
+  },
+  "type": "module",
+  "scripts": {
+    "check": "vp check"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vite-plus": "^1.4.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.18"
   }
 }
