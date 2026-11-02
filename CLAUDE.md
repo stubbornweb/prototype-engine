@@ -56,3 +56,13 @@ prototype → extract-pattern → clean recipe → registry → reuse
 ```
 
 Do not copy a reference site's identity. Extract the interaction/composition pattern and create an original implementation.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for `stubbornweb/prototype-engine` (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
