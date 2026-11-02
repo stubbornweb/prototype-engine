@@ -4,8 +4,8 @@ status: prototype
 visual_mode: undecided
 hero: undecided
 stack:
-  frontend: astro
-  interactive: react
+  shell: astro
+  styling: tailwind-latest-major
   motion: motion
   three: optional
   cms: optional

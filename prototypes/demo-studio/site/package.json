@@ -1,15 +1,31 @@
 {
-  "name": "prototype-site",
-  "private": true,
+  "name": "site",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check && vp check && prettier --plugin prettier-plugin-astro \"src/**/*.astro\" --check",
+    "fmt": "vp fmt && prettier --plugin prettier-plugin-astro \"src/**/*.astro\" --write"
   },
   "dependencies": {
-    "@astrojs/check": "latest",
-    "astro": "latest",
-    "typescript": "latest"
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.5",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.2",
+    "typescript": "^6.0.3",
+    "vite-plus": "1.4.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }
