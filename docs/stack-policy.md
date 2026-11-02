@@ -1,6 +1,6 @@
 # Stack policy
 
-**This file is the single source of truth.** `src/cli.mjs` injects it verbatim
+**This file is the single source of truth.** `src/cli.ts` injects it verbatim
 into every generated `BUILD_PROMPT.md`. `CLAUDE.md`, `README.md`, and
 `.claude/skills/prototype-engine/SKILL.md` point here instead of restating it.
 
@@ -23,13 +23,13 @@ so do not count it either.
 
 | Sections that need JS to work | Shell | Why |
 | --- | --- | --- |
-| Most of them | **React + Vite** | Everything would be an island anyway; a second component model buys nothing and costs a decision per section |
+| Most of them | **React + Vite+** | Everything would be an island anyway; a second component model buys nothing and costs a decision per section |
 | A handful, rest is content | **Astro** + React islands | Ships near-zero JS for the content majority |
 | None | **Astro**, no islands | |
 
-**React + Vite** fits configurators, dashboards, booking flows and interactive
+**React + Vite+** fits configurators, dashboards, booking flows and interactive
 3D. In that class of work Astro's island boundaries become per-section overhead
-— you write the `.astro` wrapper, the `.jsx` island, *and* the `client:`
+— you write the `.astro` wrapper, the `.tsx` island, *and* the `client:`
 directive decision, then debug the ones that silently didn't hydrate. Those
 debug round-trips are the real context cost, not the file count.
 
@@ -41,7 +41,50 @@ State the choice and the section count in `EXPERIENCE.md` before writing code.
 Do not switch shells mid-prototype; finish, then port under `web-production` if
 the bundle actually warrants it.
 
-## 2. Styling: Tailwind, always current major
+## 2. Language and toolchain
+
+- **Strict TypeScript, always.** Project code is `.ts` and `.tsx`. Never write
+  `.js` or `.jsx`. Config files are `.ts` too. The scaffold turns on
+  `strict: true`.
+- **Tailwind, always** (§3).
+- **Create `site/` only with `prototype-engine scaffold <slug> --shell
+  astro|react`.** Never by hand. The command runs the official tool
+  (`create-astro` or `create-vite`) through Vite+ (`npm create vite-plus@latest`),
+  so versions are current. It then adds strict TypeScript, Tailwind 4 and the
+  scripts below.
+- **Run `npm run check` in `site/` before you call a prototype done.** Fix
+  every error.
+
+| Shell | `dev` / `build` | `check` | `fmt` |
+| --- | --- | --- | --- |
+| Astro | `astro dev` / `astro build` | `astro check`, `vp check`, and a Prettier check of `.astro` files | `vp fmt` and Prettier on `.astro` files |
+| React + Vite+ | `vp dev` / `tsc -b && vp build` | `vp check` | `vp fmt` |
+
+`vp check` (Vite+) checks formatting, lint rules and type errors in `.ts` and
+`.tsx` files.
+
+**Astro and Vite+.** Keep the `astro dev` and `astro build` scripts. On Astro,
+`vp dev` returns 404 for every page, and `vp build` fails with "Cannot resolve
+entry module index.html". This is an open Vite+ issue:
+https://github.com/voidzero-dev/vite-plus/issues/1506.
+
+**`.astro` files.** `vp lint`, `vp fmt` and `vp check` skip `.astro` files.
+Two tools cover the gap:
+
+- `astro check` finds type errors in `.astro` and `.tsx` files.
+- Prettier with `prettier-plugin-astro` formats `.astro` files. It only touches
+  `.astro` files, so it does not conflict with `vp fmt`.
+
+No tool lints `.astro` files. This gap is open.
+
+**React islands in Astro.** The scaffold has none. When a section needs one,
+run `npx astro add react --yes` in `site/` and write the island in `.tsx`.
+
+**Vue islands.** `vp fmt` formats `.vue` files. `vp lint`, `vp check` and
+`astro check` do not find lint or type errors in them. If you add Vue, add
+`vue-tsc --noEmit` to the `check` script.
+
+## 3. Styling: Tailwind, always current major
 
 - **Always the latest stable Tailwind major.** At time of writing that is v4.
   Before scaffolding, confirm the current version and API via Context7
@@ -58,14 +101,14 @@ the bundle actually warrants it.
   `@source not`, and `source(none)`.
 - With Vite, use the first-party `@tailwindcss/vite` plugin, not PostCSS.
 
-## 3. Pin versions
+## 4. Pin versions
 
 Never write `"latest"` in a `package.json`. An engine that claims reproducible
 output cannot have a scaffold that resolves differently every week. Pin a
 caret range (`^4.1.0`) and record what was actually installed in
 `prototype.yaml`.
 
-## 4. Motion, 3D, video
+## 5. Motion, 3D, video
 
 - CSS first: transitions, and scroll-driven animations for scroll reveals and
   progress cues. **Motion** for UI animation inside islands that need JS anyway.
@@ -89,14 +132,14 @@ caret range (`^4.1.0`) and record what was actually installed in
   fails silently by showing the poster — check `videoWidth > 0` in the browser,
   not just that the file plays locally.
 
-## 5. Backend
+## 6. Backend
 
 - **Payload CMS** for structured content on a JS/TS stack.
 - **Laravel** when the project needs custom business logic, queues, auth, or
   richer backend services.
 - A prototype gets neither unless the brief is specifically about the backend.
 
-## 6. Delivery
+## 7. Delivery
 
 - **Vercel** for prototype deployment.
 - **Playwright** for browser/visual QA. A prototype is never done from source

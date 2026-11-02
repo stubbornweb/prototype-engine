@@ -30,7 +30,7 @@ Only after the prototype proves useful or the user explicitly asks for productio
 
 See **[docs/stack-policy.md](docs/stack-policy.md)** — it is the single source
 of truth for shell, styling, motion, 3D, video, backend, and delivery choices,
-and `src/cli.mjs` injects it into every generated build prompt.
+and `src/cli.ts` injects it into every generated build prompt.
 
 Do not restate the policy here. Two summaries drift; one does not.
 
@@ -38,7 +38,10 @@ Headlines:
 
 - Shell is chosen by **how many sections need JavaScript to work**, not by
   project category. Decoration that CSS can do does not count. Mostly
-  interactive → React + Vite; content-led → Astro.
+  interactive → React + Vite+; content-led → Astro.
+- Code is **strict TypeScript, always**. Create `site/` only with
+  `prototype-engine scaffold <slug> --shell astro|react`, never by hand. Run
+  `npm run check` in `site/` before you call it done.
 - Styling is **Tailwind, always the latest stable major**, configured CSS-first.
   Never generate `tailwind.config.js`.
 - Never pin `"latest"` in a `package.json`.
