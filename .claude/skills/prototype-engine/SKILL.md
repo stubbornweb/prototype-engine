@@ -28,8 +28,9 @@ Technology choices are governed by `docs/stack-policy.md` in the engine root.
 Read it before scaffolding; do not substitute remembered defaults.
 
 The one decision to make explicitly, every time: count the sections that need
-client JS. Mostly interactive → React + Vite. Content-led with a few islands →
-Astro. Record the count and the choice in `EXPERIENCE.md` before writing code.
+JavaScript to work. Decoration that CSS can do — scroll reveals, progress lines,
+parallax, hover — does not count. Mostly interactive → React + Vite. Content-led
+with a few islands, or none → Astro. Record the count and the choice in `EXPERIENCE.md` before writing code.
 
 ## Stop condition
 The prototype is done when it passes the five-second rule on mobile, stays inside the performance budget, keeps native scroll/keyboard intact, and has a strong visual hook, coherent composition, working interaction, and no obvious browser errors.

@@ -8,27 +8,34 @@ If you change the policy, change it here and nowhere else.
 
 ---
 
-## 1. Shell: decide by interactivity density, not by category
+## 1. Shell: decide by what needs JavaScript to work
 
-Count the sections in the brief that need client JS — scroll reveals, hover
-choreography, form state, video players, 3D, carousels.
+Count the sections in the brief that need client JS **to work**: form state,
+input that changes the page, media controls the visitor uses, 3D the visitor
+moves, carousels, filters, multi-step flows.
 
-| Interactive sections | Shell | Why |
+Do not count decoration that CSS can do: fade or rise on scroll, scroll
+progress lines, parallax, hover effects. Build these with CSS transitions and
+scroll-driven animations (`animation-timeline: view()` / `scroll()`). Content
+must be visible and complete in browsers that do not run the animation. A muted
+background loop needs a few lines of plain script, not a component framework,
+so do not count it either.
+
+| Sections that need JS to work | Shell | Why |
 | --- | --- | --- |
-| Most of them | **React + Vite** (default) | Everything would be an island anyway; a second component model buys nothing and costs a decision per section |
-| A handful, rest is prose | **Astro** + React islands | Ships near-zero JS for the static majority |
-| Genuinely static | **Astro**, no islands | |
+| Most of them | **React + Vite** | Everything would be an island anyway; a second component model buys nothing and costs a decision per section |
+| A handful, rest is content | **Astro** + React islands | Ships near-zero JS for the content majority |
+| None | **Astro**, no islands | |
 
-**Default to React + Vite.** This engine produces interactive marketing
-pages, and in that class of work most sections carry some client JS.
-(How much motion is warranted is decided by `docs/customer-first.md`, not here.) When
-that is true, Astro's island boundaries become per-section overhead — you write
-the `.astro` wrapper, the `.jsx` island, *and* the `client:` directive decision,
-then debug the ones that silently didn't hydrate. Those debug round-trips are
-the real context cost, not the file count.
+**React + Vite** fits configurators, dashboards, booking flows and interactive
+3D. In that class of work Astro's island boundaries become per-section overhead
+— you write the `.astro` wrapper, the `.jsx` island, *and* the `client:`
+directive decision, then debug the ones that silently didn't hydrate. Those
+debug round-trips are the real context cost, not the file count.
 
-Reach for Astro when the brief is content-led: long copy, many routes, blog or
-docs pages, or SEO is an explicit requirement.
+**Astro** fits content-led pages: a landing or portfolio page that explains an
+offer, long copy, many routes, blog or docs pages, or any brief where search
+traffic matters. These usually count a handful or none.
 
 State the choice and the section count in `EXPERIENCE.md` before writing code.
 Do not switch shells mid-prototype; finish, then port under `web-production` if
@@ -60,7 +67,8 @@ caret range (`^4.1.0`) and record what was actually installed in
 
 ## 4. Motion, 3D, video
 
-- CSS transitions first. **Motion** for ordinary UI animation.
+- CSS first: transitions, and scroll-driven animations for scroll reveals and
+  progress cues. **Motion** for UI animation inside islands that need JS anyway.
 - **GSAP** only for genuinely timeline-heavy scroll choreography.
 - **Three.js / R3F** only when the object must respond to user input, and
   lazy-loaded after the H1/CTA paint. A canvas

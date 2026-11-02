@@ -36,8 +36,9 @@ Do not restate the policy here. Two summaries drift; one does not.
 
 Headlines:
 
-- Shell is chosen by **interactivity density**, not by project category.
-  React + Vite is the default; Astro is for content-led briefs.
+- Shell is chosen by **how many sections need JavaScript to work**, not by
+  project category. Decoration that CSS can do does not count. Mostly
+  interactive → React + Vite; content-led → Astro.
 - Styling is **Tailwind, always the latest stable major**, configured CSS-first.
   Never generate `tailwind.config.js`.
 - Never pin `"latest"` in a `package.json`.

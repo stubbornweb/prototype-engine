@@ -17,8 +17,9 @@ new → build → review → publish → extract-pattern
 Defined once in **[docs/stack-policy.md](docs/stack-policy.md)** and injected
 verbatim into every generated build prompt.
 
-In short: the shell is chosen by how many sections need client JS (React + Vite
-by default, Astro for content-led briefs); styling is Tailwind's latest stable
+In short: the shell is chosen by how many sections need JavaScript to work, not
+counting CSS-able decoration (React + Vite for mostly interactive briefs, Astro
+for content-led ones); styling is Tailwind's latest stable
 major configured CSS-first; Motion for UI animation and GSAP only for heavy
 timeline work; 3D only when the object responds to input; Vercel for deploys and
 Playwright for visual QA.
