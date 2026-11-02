@@ -3,8 +3,9 @@
 import { existsSync, mkdirSync, readFileSync, cpSync, writeFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const ROOT = process.cwd();
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 function usage() {
   console.log(`\nPrototype Engine\n\nUsage:\n  prototype-engine new <slug> --brief \"...\"\n  prototype-engine build <slug>\n  prototype-engine review <slug>\n  prototype-engine publish <slug>\n  prototype-engine extract-pattern <slug> <pattern-id>\n\nEnvironment:\n  PROTOTYPE_ENGINE_ROOT   Override engine root\n  CLAUDE_BIN              Claude Code executable (default: claude)\n`);

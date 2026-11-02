@@ -28,9 +28,10 @@ Playwright for visual QA.
 
 ```bash
 npm install
-npm run build
 npm link
 ```
+
+`npm link` puts the `prototype-engine` command on your PATH. Projects always go into `prototypes/<slug>/` inside this folder, from any folder where you run the command. Set `PROTOTYPE_ENGINE_ROOT` to use a different engine folder.
 
 Then:
 
