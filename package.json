@@ -1,6 +1,5 @@
 {
   "name": "prototype-engine",
-  "version": "0.1.0",
   "private": true,
   "description": "Fast AI-assisted web experience prototype engine for Claude Code.",
   "bin": {
@@ -8,7 +7,8 @@
   },
   "type": "module",
   "scripts": {
-    "check": "vp check"
+    "check": "vp check",
+    "test": "vp test"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
@@ -16,6 +16,6 @@
     "vite-plus": "^1.4.0"
   },
   "engines": {
-    "node": ">=22.18"
+    "node": ">=26"
   }
 }

@@ -1,0 +1,80 @@
+# Prototype Engine — agent rules
+
+This repository is an AI-assisted rapid web experience factory.
+
+## Shared rules
+
+1. Work on a branch and open a pull request. Never push to `main`.
+2. Write a failing test first for any code with logic.
+3. Run `npm run check` and `npm test` before you open a pull request.
+4. Write all text in plain English (Simplified Technical English style, CEFR B1).
+
+Prototype sites have no unit tests. Check a prototype site in a real browser.
+
+## Primary objective
+Build a demo-ready website prototype quickly that helps the client sell: visitors understand the offer, trust it, and act. It must look modern and distinctive — but we design for the client's customers, not for other designers. Prefer a strong visual idea and a small number of excellent, purposeful interactions over a large feature set.
+
+See **[docs/customer-first.md](docs/customer-first.md)** — the second source of truth, also injected into every build prompt. When visual ambition conflicts with clarity, speed, or native browser behaviour, customer-first wins.
+
+## Operating modes
+
+### Prototype mode
+Optimize for speed, visual impact, and learning. Keep architecture lightweight.
+
+### Client production mode
+Only after the prototype proves useful or the user explicitly asks for production. Then apply `web-production` and refactor for maintainability, performance, accessibility, SEO, reliability, and deployment.
+
+## Skill order
+
+1. `prototype-engine` — orchestration
+2. `web-design` — visual direction
+3. `web-patterns` — reuse local patterns
+4. `web-motion` — UI/scroll choreography
+5. `web-3d` — real-time 3D when it earns the complexity
+6. `web-video` — cinematic video when passive motion is better
+7. `web-visual-qa` — inspect the rendered site
+8. `web-production` — only for client/production work
+
+## Default technical policy
+
+See **[docs/stack-policy.md](docs/stack-policy.md)** — it is the single source
+of truth for shell, styling, motion, 3D, video, backend, and delivery choices,
+and `src/cli.ts` injects it into every generated build prompt.
+
+Do not restate the policy here. Two summaries drift; one does not.
+
+Headlines:
+
+- Shell is chosen by **how many sections need JavaScript to work**, not by
+  project category. Decoration that CSS can do does not count. Mostly
+  interactive → React + Vite+; content-led → Astro.
+- Code is **strict TypeScript, always**. Create `site/` only with
+  `prototype-engine scaffold <slug> --shell astro|react`, never by hand. Run
+  `npm run check` in `site/` before you call it done.
+- Styling is **Tailwind, always the latest stable major**, configured CSS-first.
+  Never generate `tailwind.config.js`.
+- Never pin `"latest"` in a `package.json`.
+
+## Browser truth
+
+Do not declare a visual prototype finished from source inspection alone. Run it and inspect the actual browser result when possible. Fix the biggest visible issues first.
+
+## Pattern flywheel
+
+When a prototype contains a reusable technique:
+
+```text
+prototype → extract-pattern → clean recipe → registry → reuse
+```
+
+Do not copy a reference site's identity. Extract the interaction/composition pattern and create an original implementation.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for `stubbornweb/prototype-engine` (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
