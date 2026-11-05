@@ -15,4 +15,5 @@ export default defineConfig({
     ignorePatterns,
     options: { typeAware: true, typeCheck: true },
   },
+  test: { passWithNoTests: true },
 });

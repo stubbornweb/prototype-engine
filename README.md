@@ -26,7 +26,7 @@ Playwright for visual QA.
 
 ## Install
 
-Node 22.18 or newer is required. The CLI is TypeScript that Node runs directly, so there is no build step.
+Node 26 or newer is required. The CLI is TypeScript that Node runs directly, so there is no build step.
 
 ```bash
 npm install
