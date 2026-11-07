@@ -49,7 +49,7 @@ Headlines:
   project category. Decoration that CSS can do does not count. Mostly
   interactive → React + Vite+; content-led → Astro.
 - Code is **strict TypeScript, always**. Create `site/` only with
-  `prototype-engine scaffold <slug> --shell astro|react`, never by hand. Run
+  `prototype-engine scaffold --shell astro|react`, never by hand. Run
   `npm run check` in `site/` before you call it done.
 - Styling is **Tailwind, always the latest stable major**, configured CSS-first.
   Never generate `tailwind.config.js`.

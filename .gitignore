@@ -6,7 +6,3 @@ dist/
 .DS_Store
 .vercel/
 .playwright-mcp/
-prototypes/*
-!prototypes/demo-studio/
-
-

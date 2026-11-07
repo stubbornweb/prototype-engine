@@ -26,29 +26,38 @@ Playwright for visual QA.
 
 ## Install
 
-Node 26 or newer is required. The CLI is TypeScript that Node runs directly, so there is no build step.
+Node 26 or newer is required. The engine is a Claude Code plugin from the studio marketplace. Run these in Claude Code:
 
-```bash
-npm install
-npm link
+```text
+/plugin marketplace add stubbornweb/studio
+/plugin install prototype-engine@studio
 ```
 
-`npm link` puts the `prototype-engine` command on your PATH. Projects always go into `prototypes/<slug>/` inside this folder, from any folder where you run the command. Set `PROTOTYPE_ENGINE_ROOT` to use a different engine folder.
+The plugin gives you the web skills and puts the `prototype-engine` command on the PATH of the Bash tool in Claude Code.
 
-Then:
+## Use
+
+Run the commands inside a meta repo, `~/www/<slug>-meta/`. The folder name gives the slug. Output goes into the `3-prototype/` folder of that meta repo. To make a meta repo, run `setup-meta-repo <slug>`.
 
 ```bash
-prototype-engine new architecture-studio --brief "A dark cinematic website for a premium architecture studio with an interactive hero."
-prototype-engine scaffold architecture-studio --shell astro
-prototype-engine build architecture-studio
-prototype-engine review architecture-studio
-prototype-engine publish architecture-studio
-prototype-engine extract-pattern architecture-studio architecture-hero
+# A project (the meta repo has PROJECT.md). The brief is 1-idea/PROJECT-DESCRIPTION.md.
+prototype-engine new
+
+# A quick experiment (no PROJECT.md)
+prototype-engine new --pitch "A dark cinematic website for a premium architecture studio."
+
+prototype-engine scaffold --shell astro
+prototype-engine build
+prototype-engine review
+prototype-engine publish
+prototype-engine extract-pattern architecture-hero
 ```
 
-`new --shell astro|react` creates the brief files and then the site. `new` without `--shell` creates only the brief files. `scaffold` creates `prototypes/<slug>/site/` with the official Astro or Vite tool, strict TypeScript and Tailwind. It fails if `site/` already exists.
+A meta repo has one prototype. `new` fails if `3-prototype/` exists. To start a new direction, delete `3-prototype/` first. Git keeps the old one. For a project, `new` also sets `**Stage:** prototype` in `PROJECT.md`.
 
-Run `npm run check` in this folder to check the CLI. Run it in `prototypes/<slug>/site/` to check a site.
+`new --shell astro|react` creates the brief files and then the site. `scaffold` creates `3-prototype/site/` with the official Astro or Vite tool, strict TypeScript and Tailwind. It fails if `site/` already exists.
+
+Run `npm run check` and `npm test` in this repo to check the CLI. Run `npm run check` in `3-prototype/site/` to check a site.
 
 ## Design principle
 
