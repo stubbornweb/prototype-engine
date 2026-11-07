@@ -1,0 +1,20 @@
+{
+  "name": "prototype-engine",
+  "description": "The Prototype Engine of the studio: turn a project brief or a one-line pitch into a distinctive, demo-ready website prototype inside a meta repo, with web design, motion, 3D, video and visual QA skills.",
+  "author": {
+    "name": "Yevhenii Volosiuk"
+  },
+  "repository": "https://github.com/stubbornweb/prototype-engine",
+  "license": "MIT",
+  "keywords": ["skills", "prototype", "web-design", "motion", "3d", "visual-qa", "landing-page"],
+  "skills": [
+    "./skills/prototype-engine",
+    "./skills/web-3d",
+    "./skills/web-design",
+    "./skills/web-motion",
+    "./skills/web-patterns",
+    "./skills/web-production",
+    "./skills/web-video",
+    "./skills/web-visual-qa"
+  ]
+}

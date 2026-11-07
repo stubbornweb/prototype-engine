@@ -5,7 +5,7 @@ description: Select and reuse patterns from the local pattern registry when buil
 
 # Web Patterns
 
-Search `patterns/` before inventing a new interaction.
+Search `${CLAUDE_PLUGIN_ROOT}/patterns/` before inventing a new interaction.
 
 A reusable pattern defines:
 - visual intent
