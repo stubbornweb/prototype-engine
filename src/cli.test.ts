@@ -37,7 +37,15 @@ function makeRepo(name: string, files: Record<string, string> = {}): string {
 }
 
 function run(cwd: string, ...args: string[]) {
-  const result = spawnSync("node", [CLI, ...args], { cwd, encoding: "utf8" });
+  return runWithHome(process.env.HOME ?? "", cwd, ...args);
+}
+
+function runWithHome(home: string, cwd: string, ...args: string[]) {
+  const result = spawnSync("node", [CLI, ...args], {
+    cwd,
+    encoding: "utf8",
+    env: { ...process.env, HOME: home },
+  });
   return { status: result.status, stderr: result.stderr, stdout: result.stdout };
 }
 
@@ -190,5 +198,30 @@ describe("extract-pattern", () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("a-z");
     expect(result.stderr).toContain("40 characters");
+  });
+
+  test("writes the pattern into the local engine repo", () => {
+    const home = makeRepo("home", { "www/prototype-engine/patterns/.keep": "" });
+    const root = makeRepo("demo-meta", { "3-prototype/EXPERIENCE.md": "# demo\n\nSplit hero\n" });
+    const result = runWithHome(home, root, "extract-pattern", "split-hero-test");
+    expect(result.status).toBe(0);
+    const pattern = readFileSync(
+      join(home, "www/prototype-engine/patterns/split-hero-test/PATTERN.md"),
+      "utf8",
+    );
+    expect(pattern).toContain("Extracted from prototype: demo");
+    expect(pattern).toContain("Split hero");
+    expect(result.stdout).toContain("pull request");
+  });
+
+  test("without the local engine repo it fails and names the clone command", () => {
+    const home = makeRepo("home");
+    const root = makeRepo("demo-meta", { "3-prototype/EXPERIENCE.md": "x\n" });
+    const result = runWithHome(home, root, "extract-pattern", "split-hero-test");
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "gh repo clone stubbornweb/prototype-engine ~/www/prototype-engine",
+    );
+    expect(listFiles(home)).toEqual([]);
   });
 });
