@@ -8,11 +8,18 @@ description: Orchestrate fast, visually distinctive website prototypes. Use when
 ## Mission
 Create a demo-ready web experience quickly that helps the client's customers understand, trust, and act — without sacrificing visible quality.
 
-Design for the customer, not for other designers. `docs/customer-first.md` is the second source of truth next to the stack policy; when visual ambition conflicts with clarity, speed, or native behaviour, customer-first wins.
+Design for the customer, not for other designers. `${CLAUDE_PLUGIN_ROOT}/docs/customer-first.md` is the second source of truth next to the stack policy; when visual ambition conflicts with clarity, speed, or native behaviour, customer-first wins.
+
+## Where it runs
+The engine runs inside a meta repo (`~/www/<slug>-meta`) and works on its `3-prototype/` folder. The folder name gives the slug. Run the commands from any folder inside the meta repo.
+
+- A project (the meta repo has `PROJECT.md`): run `prototype-engine new`. It reads the brief from `1-idea/PROJECT-DESCRIPTION.md` and sets the stage in `PROJECT.md` to `prototype`. If the brief is missing, run `project-brief` first.
+- A quick experiment (no `PROJECT.md`): run `prototype-engine new --pitch "<one line>"`.
+- A meta repo has one prototype. To start a new direction, delete `3-prototype/` first. Git keeps the old one.
 
 ## Workflow
-1. Read the prototype's `EXPERIENCE.md` and `prototype.yaml`.
-2. Fill the customer contract (`docs/customer-first.md` §1), then establish one coherent visual direction that serves it.
+1. Read the prototype's `EXPERIENCE.md` and `prototype.yaml` in `3-prototype/`.
+2. Fill the customer contract (`${CLAUDE_PLUGIN_ROOT}/docs/customer-first.md` §1), then establish one coherent visual direction that serves it.
 3. Load only the specialist skills needed: web-design, web-patterns, web-motion, web-3d, web-video.
 4. Prefer existing patterns over new infrastructure.
 5. Build the smallest page that communicates the idea strongly.
@@ -24,14 +31,14 @@ Design for the customer, not for other designers. `docs/customer-first.md` is th
 
 ## Routing rules
 
-Technology choices are governed by `docs/stack-policy.md` in the engine root.
+Technology choices are governed by `${CLAUDE_PLUGIN_ROOT}/docs/stack-policy.md`.
 Read it before scaffolding; do not substitute remembered defaults.
 
 The one decision to make explicitly, every time: count the sections that need
 JavaScript to work. Decoration that CSS can do — scroll reveals, progress lines,
 parallax, hover — does not count. Mostly interactive → React + Vite+. Content-led
 with a few islands, or none → Astro. Record the count and the choice in `EXPERIENCE.md` before writing code.
-Then create `site/` with `prototype-engine scaffold <slug> --shell astro|react`, never by hand. Write strict TypeScript, and run `npm run check` in `site/` before you finish.
+Then create `site/` with `prototype-engine scaffold --shell astro|react`, never by hand. Write strict TypeScript, and run `npm run check` in `site/` before you finish.
 
 ## Stop condition
 The prototype is done when it passes the five-second rule on mobile, stays inside the performance budget, keeps native scroll/keyboard intact, and has a strong visual hook, coherent composition, working interaction, and no obvious browser errors.

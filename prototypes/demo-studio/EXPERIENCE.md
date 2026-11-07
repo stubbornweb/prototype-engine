@@ -1,6 +1,6 @@
 # demo-studio
 
-## Brief
+## Pitch
 A dark cinematic portfolio for a premium architecture studio with an interactive 3D hero and restrained motion.
 
 ## Experience decision
@@ -16,4 +16,4 @@ A dark cinematic portfolio for a premium architecture studio with an interactive
 
 Prototype mode: fast, polished, demo-ready.
 
-Client promotion requires the production gate in \.claude/skills/web-production/SKILL.md.
+Client promotion requires the production gate in the `web-production` skill.

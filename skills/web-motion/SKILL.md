@@ -11,7 +11,7 @@ Default:
 - GSAP for scroll-scrubbed or multi-stage timeline choreography
 
 Rules:
-- every non-trivial animation has a customer job (`docs/customer-first.md` §3)
+- every non-trivial animation has a customer job (`${CLAUDE_PLUGIN_ROOT}/docs/customer-first.md` §3)
 - establish a motion hierarchy: one attention-grabber per viewport
 - avoid animating everything
 - preserve readability while motion runs

@@ -2,9 +2,6 @@
   "name": "prototype-engine",
   "private": true,
   "description": "Fast AI-assisted web experience prototype engine for Claude Code.",
-  "bin": {
-    "prototype-engine": "src/cli.ts"
-  },
   "type": "module",
   "scripts": {
     "check": "vp check",

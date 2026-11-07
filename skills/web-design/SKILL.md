@@ -5,7 +5,7 @@ description: Establish a distinctive visual direction and translate it into a co
 
 # Web Design
 
-Start from the customer contract in `EXPERIENCE.md` (`docs/customer-first.md` §1). The visual direction exists to make that offer clear, credible, and easy to act on — and to look current and memorable while doing it.
+Start from the customer contract in `EXPERIENCE.md` (`${CLAUDE_PLUGIN_ROOT}/docs/customer-first.md` §1). The visual direction exists to make that offer clear, credible, and easy to act on — and to look current and memorable while doing it.
 
 Create a design contract before implementation:
 - visual concept — and which customer question it helps answer

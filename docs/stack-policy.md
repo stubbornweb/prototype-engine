@@ -2,7 +2,7 @@
 
 **This file is the single source of truth.** `src/cli.ts` injects it verbatim
 into every generated `BUILD_PROMPT.md`. `CLAUDE.md`, `README.md`, and
-`.claude/skills/prototype-engine/SKILL.md` point here instead of restating it.
+`skills/prototype-engine/SKILL.md` point here instead of restating it.
 
 If you change the policy, change it here and nowhere else.
 
@@ -47,7 +47,7 @@ the bundle actually warrants it.
   `.js` or `.jsx`. Config files are `.ts` too. The scaffold turns on
   `strict: true`.
 - **Tailwind, always** (§3).
-- **Create `site/` only with `prototype-engine scaffold <slug> --shell
+- **Create `site/` only with `prototype-engine scaffold --shell
   astro|react`.** Never by hand. The command runs the official tool
   (`create-astro` or `create-vite`) through Vite+ (`npm create vite-plus@latest`),
   so versions are current. It then adds strict TypeScript, Tailwind 4 and the
@@ -123,7 +123,7 @@ caret range (`^4.1.0`) and record what was actually installed in
   adds a manifest round-trip, segment requests, a player library, and loop
   seams. Ship **AV1 MP4 first** (≈ ¼ the bytes) with an **H.264 MP4 fallback**,
   chosen in JS via `canPlayType` so nothing downloads under reduced motion or
-  Save-Data. Reference: `prototypes/portfolio-studio/src/lib/useVideoSource.js`.
+  Save-Data.
 - For a loop whose last frame doesn't match its first, bake a **ping-pong**
   (forward + reversed, turnaround duplicates trimmed) into the file with
   ffmpeg — never reverse in the browser.

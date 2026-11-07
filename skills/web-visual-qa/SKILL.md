@@ -11,7 +11,7 @@ Review at minimum — mobile first:
 - mobile 390×844
 - desktop 1440×900
 
-Customer checks first (`docs/customer-first.md`):
+Customer checks first (`${CLAUDE_PLUGIN_ROOT}/docs/customer-first.md`):
 - five-second rule: screenshot the mobile fold, answer offer / who / outcome / next action from it alone
 - mobile LCP with 4G + 4× CPU throttling; H1 and CTA not hidden by entrance animation
 - keyboard pass: Tab through nav and CTAs, Space/Page Down scroll the page

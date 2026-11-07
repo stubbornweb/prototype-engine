@@ -1,6 +1,4 @@
-name: demo-studio
-brief: "A dark cinematic portfolio for a premium architecture studio with an interactive 3D hero and restrained motion."
-status: prototype
+pitch: "A dark cinematic portfolio for a premium architecture studio with an interactive 3D hero and restrained motion."
 visual_mode: undecided
 hero: undecided
 stack:
