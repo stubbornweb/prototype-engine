@@ -9,6 +9,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { homedir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -465,7 +466,15 @@ function extractPattern(ws: Workspace, patternId: string): void {
     throw new Error(`"${patternId}" is not a valid pattern id. ${NAME_RULE}`);
   }
   const source = requirePrototype(ws);
-  const destination = join(ROOT, "patterns", patternId);
+  // The plugin install folder is replaced on each update, so new patterns go into
+  // the local clone of the engine repo and reach the plugin through a pull request.
+  const patterns = join(homedir(), "www", "prototype-engine", "patterns");
+  if (!existsSync(patterns)) {
+    throw new Error(
+      "The engine repo is not at ~/www/prototype-engine. Run: gh repo clone stubbornweb/prototype-engine ~/www/prototype-engine",
+    );
+  }
+  const destination = join(patterns, patternId);
   if (existsSync(destination)) throw new Error(`Pattern already exists: ${patternId}`);
   mkdirSync(destination, { recursive: true });
   const sourceSpec = join(source, "EXPERIENCE.md");
@@ -474,7 +483,9 @@ function extractPattern(ws: Workspace, patternId: string): void {
     join(destination, "PATTERN.md"),
     `# ${patternId}\n\nExtracted from prototype: ${ws.slug}\n\n## Source notes\n${body}\n\n## TODO\n- [ ] Make the pattern independent\n- [ ] Define inputs/variants\n- [ ] Document mobile behavior\n- [ ] Document performance expectations\n- [ ] Add a live demo\n- [ ] Add an agent recipe\n`,
   );
-  console.log(`Pattern created: ${destination}`);
+  console.log(
+    `Pattern created: ${destination}. Commit it on a branch of prototype-engine and open a pull request.`,
+  );
 }
 
 function main(): void {

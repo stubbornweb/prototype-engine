@@ -57,6 +57,8 @@ A meta repo has one prototype. `new` fails if `3-prototype/` exists. To start a 
 
 `new --shell astro|react` creates the brief files and then the site. `scaffold` creates `3-prototype/site/` with the official Astro or Vite tool, strict TypeScript and Tailwind. It fails if `site/` already exists.
 
+`extract-pattern` writes into the local clone of this repo, `~/www/prototype-engine/patterns/<pattern-id>/`. A new pattern reaches the plugin through a pull request.
+
 Run `npm run check` and `npm test` in this repo to check the CLI. Run `npm run check` in `3-prototype/site/` to check a site.
 
 ## Design principle
