@@ -164,6 +164,25 @@ describe("new, existing prototype", () => {
   });
 });
 
+describe("build", () => {
+  test("a project prompt holds the brief and the scaffold step without a slug", () => {
+    const root = makeRepo("acme-meta", {
+      "PROJECT.md": PROJECT_MD,
+      "1-idea/PROJECT-DESCRIPTION.md": BRIEF,
+    });
+    run(root, "new");
+    const result = spawnSync("node", [CLI, "build"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, CLAUDE_BIN: "true" },
+    });
+    expect(result.status).toBe(0);
+    const prompt = readFileSync(join(root, "3-prototype/BUILD_PROMPT.md"), "utf8");
+    expect(prompt).toContain("A site that sells shoes.");
+    expect(prompt).toContain("prototype-engine scaffold --shell <your choice>");
+  });
+});
+
 describe("extract-pattern", () => {
   test("rejects a wrong pattern id and shows the rule", () => {
     const root = makeRepo("demo-meta", { "3-prototype/EXPERIENCE.md": "x\n" });

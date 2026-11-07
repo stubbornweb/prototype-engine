@@ -9,7 +9,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { join, resolve } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -17,19 +17,48 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 function usage(): never {
   console.log(
-    `\nPrototype Engine\n\nUsage:\n  prototype-engine new <slug> --brief "..." [--shell astro|react]\n  prototype-engine scaffold <slug> --shell astro|react\n  prototype-engine build <slug>\n  prototype-engine review <slug>\n  prototype-engine publish <slug>\n  prototype-engine extract-pattern <slug> <pattern-id>\n\nEnvironment:\n  PROTOTYPE_ENGINE_ROOT   Override engine root\n  CLAUDE_BIN              Claude Code executable (default: claude)\n`,
+    `\nPrototype Engine\n\nRun inside a meta repo (~/www/<slug>-meta). Work goes into 3-prototype/.\n\nUsage:\n  prototype-engine new [--pitch "<one line>"] [--shell astro|react]\n  prototype-engine scaffold --shell astro|react\n  prototype-engine build\n  prototype-engine review\n  prototype-engine publish\n  prototype-engine extract-pattern <pattern-id>\n\nA project (PROJECT.md exists) reads its brief from 1-idea/PROJECT-DESCRIPTION.md.\nWithout PROJECT.md, new makes a quick experiment and needs --pitch.\n\nEnvironment:\n  CLAUDE_BIN   Claude Code executable (default: claude)\n`,
   );
   process.exit(1);
 }
 
-function engineRoot(): string {
-  return process.env.PROTOTYPE_ENGINE_ROOT ? resolve(process.env.PROTOTYPE_ENGINE_ROOT) : ROOT;
+const NAME_RULE =
+  "Use only a-z, 0-9 and single dashes. Start and end with a letter or a digit. Use 40 characters or fewer.";
+const RESERVED_SLUGS = ["hub", "idea-engine", "design-engine", "prototype-engine", "clients"];
+
+function isName(value: string): boolean {
+  return value.length <= 40 && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(value);
 }
 
-function parseBrief(args: string[]): string {
-  const i = args.indexOf("--brief");
-  if (i === -1 || !args[i + 1]) throw new Error("Missing --brief");
-  return args[i + 1];
+function checkSlug(slug: string): void {
+  if (!isName(slug) || RESERVED_SLUGS.includes(slug) || slug.endsWith("-meta")) {
+    throw new Error(
+      `"${slug}" is not a valid slug. ${NAME_RULE} A slug must not be ${RESERVED_SLUGS.join(", ")} and must not end in -meta.`,
+    );
+  }
+}
+
+type Workspace = { root: string; slug: string; isProject: boolean };
+
+function workspace(): Workspace {
+  let dir = process.cwd();
+  while (!basename(dir).endsWith("-meta")) {
+    const parent = dirname(dir);
+    if (parent === dir) {
+      throw new Error(
+        "Run this inside a meta repo (~/www/<slug>-meta). To make one, run setup-meta-repo <slug>.",
+      );
+    }
+    dir = parent;
+  }
+  const slug = basename(dir).slice(0, -"-meta".length);
+  checkSlug(slug);
+  return { root: dir, slug, isProject: existsSync(join(dir, "PROJECT.md")) };
+}
+
+function parsePitch(args: string[]): string | undefined {
+  const i = args.indexOf("--pitch");
+  return i === -1 ? undefined : (args[i + 1] ?? "");
 }
 
 // Shell is a real decision (docs/stack-policy.md §1), so it stays undecided
@@ -50,16 +79,16 @@ function requireShell(args: string[]): Shell {
   return shell;
 }
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+function prototypeDir(ws: Workspace): string {
+  return join(ws.root, "3-prototype");
 }
 
-function prototypeDir(slug: string): string {
-  return join(engineRoot(), "prototypes", slug);
+function requirePrototype(ws: Workspace): string {
+  const dir = prototypeDir(ws);
+  if (!existsSync(dir)) {
+    throw new Error("3-prototype/ does not exist. Run prototype-engine new first.");
+  }
+  return dir;
 }
 
 type Shell = "astro" | "react";
@@ -267,10 +296,8 @@ function runStep(step: Step, projectDir: string, siteDir: string): void {
   }
 }
 
-function scaffold(slugInput: string, shell: Shell): void {
-  const slug = slugify(slugInput);
-  const dir = prototypeDir(slug);
-  if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
+function scaffold(ws: Workspace, shell: Shell): void {
+  const dir = requirePrototype(ws);
   const siteDir = join(dir, "site");
   if (existsSync(siteDir)) {
     throw new Error(`site/ already exists in ${dir}. Scaffold only creates a new site/.`);
@@ -291,35 +318,72 @@ function scaffold(slugInput: string, shell: Shell): void {
   );
 }
 
-function newPrototype(slugInput: string, brief: string, shell: ShellChoice): void {
-  const slug = slugify(slugInput);
-  if (!slug) throw new Error("Invalid slug");
-  const dir = prototypeDir(slug);
-  if (existsSync(dir)) throw new Error(`Prototype already exists: ${slug}`);
+const STAGE_LINE = /^\*\*Stage:\*\* .*$/m;
+
+function newPrototype(ws: Workspace, pitch: string | undefined, shell: ShellChoice): void {
+  const dir = prototypeDir(ws);
+  if (existsSync(dir)) {
+    throw new Error(
+      "3-prototype/ already exists. A project has one prototype. To start a new direction, delete 3-prototype/ first. Git keeps the old one.",
+    );
+  }
+
+  let heading: string;
+  let text: string;
+  let pitchYaml = "";
+  let projectFile: { path: string; text: string } | undefined;
+  if (ws.isProject) {
+    if (pitch !== undefined) {
+      throw new Error(
+        "A project reads its brief from 1-idea/PROJECT-DESCRIPTION.md, so it takes no --pitch.",
+      );
+    }
+    if (!existsSync(join(ws.root, "1-idea/PROJECT-DESCRIPTION.md"))) {
+      throw new Error("1-idea/PROJECT-DESCRIPTION.md is missing. Run project-brief first.");
+    }
+    const path = join(ws.root, "PROJECT.md");
+    const projectText = readFileSync(path, "utf8");
+    if (!STAGE_LINE.test(projectText)) {
+      throw new Error("PROJECT.md has no **Stage:** line.");
+    }
+    projectFile = { path, text: projectText.replace(STAGE_LINE, "**Stage:** prototype") };
+    heading = "Brief";
+    text = "The brief is in 1-idea/PROJECT-DESCRIPTION.md.";
+  } else {
+    if (!pitch?.trim()) {
+      throw new Error(
+        'Missing --pitch "<one line>". A meta repo with no PROJECT.md makes a quick experiment from a pitch.',
+      );
+    }
+    heading = "Pitch";
+    text = pitch;
+    pitchYaml = `pitch: ${JSON.stringify(pitch)}\n`;
+  }
 
   mkdirSync(join(dir, "qa"), { recursive: true });
 
-  const spec = `# ${slug}\n\n## Brief\n${brief}\n\n## Customer contract (docs/customer-first.md §1 — fill before visuals)\n\n- Visitor: TBD\n- Their question: TBD\n- Offer: TBD\n- Outcome: TBD\n- Proof: TBD\n- Primary action: TBD\n- Business metric: TBD\n\n## Experience decision\n\n- Visual mode: undecided\n- Hero: undecided\n- Shell: ${shell} (count sections that need JS to work first — docs/stack-policy.md §1)\n- Sections that need JS to work: TBD\n- 3D: optional\n- Video: optional\n- Motion: purposeful — one attention-grabber per viewport\n- Effect budget: list each effect + the customer job it does\n- Mobile fallback: required\n\n## Quality target\n\nPrototype mode: fast, polished, demo-ready — and passes the five-second rule and performance budget in docs/customer-first.md.\n\nClient promotion requires the production gate in \\.claude/skills/web-production/SKILL.md.\n`;
+  const spec = `# ${ws.slug}\n\n## ${heading}\n${text}\n\n## Customer contract (the customer-first principles §1 — fill before visuals)\n\n- Visitor: TBD\n- Their question: TBD\n- Offer: TBD\n- Outcome: TBD\n- Proof: TBD\n- Primary action: TBD\n- Business metric: TBD\n\n## Experience decision\n\n- Visual mode: undecided\n- Hero: undecided\n- Shell: ${shell} (count sections that need JS to work first — the stack policy §1)\n- Sections that need JS to work: TBD\n- 3D: optional\n- Video: optional\n- Motion: purposeful — one attention-grabber per viewport\n- Effect budget: list each effect + the customer job it does\n- Mobile fallback: required\n\n## Quality target\n\nPrototype mode: fast, polished, demo-ready — and passes the five-second rule and performance budget in the customer-first principles.\n\nClient promotion requires the production gate in the \`web-production\` skill.\n`;
 
   writeFileSync(join(dir, "EXPERIENCE.md"), spec);
   writeFileSync(
     join(dir, "prototype.yaml"),
-    `name: ${slug}\nbrief: ${JSON.stringify(brief)}\nstatus: prototype\nvisual_mode: undecided\nhero: undecided\nstack:\n  shell: ${shell}\n  styling: tailwind-latest-major\n  motion: motion\n  three: optional\n  cms: optional\n  backend: optional\n`,
+    `${pitchYaml}visual_mode: undecided\nhero: undecided\nstack:\n  shell: ${shell}\n  styling: tailwind-latest-major\n  motion: motion\n  three: optional\n  cms: optional\n  backend: optional\n`,
   );
   writeFileSync(
     join(dir, "BUILD_PROMPT.md"),
-    "# Build prompt\n\nRun `prototype-engine build " + slug + "` to generate/update this prompt.\n",
+    "# Build prompt\n\nRun `prototype-engine build` to generate/update this prompt.\n",
   );
   writeFileSync(
     join(dir, "qa/CHECKLIST.md"),
     "# Prototype QA\n\n- [ ] Five-second rule passes on 390px (offer, who, outcome, next action)\n- [ ] H1 names the offer/outcome; primary CTA visible without scrolling\n- [ ] Proof sits next to the ask\n- [ ] Every effect has a customer job in EXPERIENCE.md\n- [ ] Mobile LCP within budget; H1/CTA not hidden behind entrance animation\n- [ ] Native scroll + keyboard navigation intact\n- [ ] Reduced-motion covers all motion, not just CSS\n- [ ] Desktop composition still distinctive\n- [ ] Mobile composition\n- [ ] No console errors\n",
   );
+  if (projectFile) writeFileSync(projectFile.path, projectFile.text);
   console.log(`Created ${dir}`);
-  if (shell !== "undecided") scaffold(slug, shell);
+  if (shell !== "undecided") scaffold(ws, shell);
 }
 
 function readDoc(name: string): string {
-  const file = join(engineRoot(), "docs", name);
+  const file = join(ROOT, "docs", name);
   if (!existsSync(file)) throw new Error(`Missing engine doc: ${file}`);
   return readFileSync(file, "utf8");
 }
@@ -327,21 +391,21 @@ function readDoc(name: string): string {
 const stackPolicy = () => readDoc("stack-policy.md");
 const customerFirst = () => readDoc("customer-first.md");
 
-function buildPrompt(slugInput: string): string {
-  const slug = slugify(slugInput);
-  const dir = prototypeDir(slug);
-  if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
+function buildPrompt(ws: Workspace, dir: string): string {
   const spec = readFileSync(join(dir, "EXPERIENCE.md"), "utf8");
-  const patterns = listPatterns(engineRoot());
-  return `You are the Prototype Engine orchestrator.\n\nGoal: turn the prototype brief into a polished, distinctive web experience that helps the client's customers understand, trust, and act — quickly.\n\nRules:\n- Design for the customer, not for other designers. Follow the customer-first principles below; they outrank visual ambition.\n- Follow the stack policy below exactly. It is authoritative; do not substitute remembered defaults.\n- Prefer reusable patterns over inventing infrastructure.\n- Keep prototype mode lightweight; do not over-engineer.\n- Verify the result in a browser before declaring done.\n\n--- BEGIN STACK POLICY ---\n${stackPolicy()}\n--- END STACK POLICY ---\n\n--- BEGIN CUSTOMER-FIRST PRINCIPLES ---\n${customerFirst()}\n--- END CUSTOMER-FIRST PRINCIPLES ---\n\nExperience spec:\n${spec}\n\nAvailable local patterns:\n${patterns}\n\nExecution:\n1. Fill the customer contract in EXPERIENCE.md (state assumptions if the brief is silent).\n2. Choose one coherent visual direction that serves it.\n3. Count the sections that need JavaScript to work (not CSS-able decoration) and record the count and shell choice in EXPERIENCE.md.\n4. If site/ does not exist, run \`prototype-engine scaffold ${slug} --shell <your choice>\`. Never create site/ by hand.\n5. Pick only the patterns needed; record each effect's customer job.\n6. Build the page in site/, in strict TypeScript with Tailwind.\n7. Run the local app.\n8. Inspect mobile first, then desktop, in a real browser; run the five-second rule and check mobile LCP.\n9. Fix the biggest clarity/speed problems, then the most visible visual ones.\n10. Run \`npm run check\` in site/ and fix every error.\n11. Leave a short note in qa/RESULT.md.\n12. Stop when it is polished enough to demo; do not gold-plate.\n`;
+  const brief = ws.isProject
+    ? `Project brief:\n${readFileSync(join(ws.root, "1-idea/PROJECT-DESCRIPTION.md"), "utf8")}\n\n`
+    : "";
+  const patterns = listPatterns();
+  return `You are the Prototype Engine orchestrator.\n\nGoal: turn the prototype brief into a polished, distinctive web experience that helps the client's customers understand, trust, and act — quickly.\n\nRules:\n- Design for the customer, not for other designers. Follow the customer-first principles below; they outrank visual ambition.\n- Follow the stack policy below exactly. It is authoritative; do not substitute remembered defaults.\n- Prefer reusable patterns over inventing infrastructure.\n- Keep prototype mode lightweight; do not over-engineer.\n- Verify the result in a browser before declaring done.\n\n--- BEGIN STACK POLICY ---\n${stackPolicy()}\n--- END STACK POLICY ---\n\n--- BEGIN CUSTOMER-FIRST PRINCIPLES ---\n${customerFirst()}\n--- END CUSTOMER-FIRST PRINCIPLES ---\n\n${brief}Experience spec:\n${spec}\n\nAvailable local patterns:\n${patterns}\n\nExecution:\n1. Fill the customer contract in EXPERIENCE.md (state assumptions if the brief is silent).\n2. Choose one coherent visual direction that serves it.\n3. Count the sections that need JavaScript to work (not CSS-able decoration) and record the count and shell choice in EXPERIENCE.md.\n4. If site/ does not exist, run \`prototype-engine scaffold --shell <your choice>\`. Never create site/ by hand.\n5. Pick only the patterns needed; record each effect's customer job.\n6. Build the page in site/, in strict TypeScript with Tailwind.\n7. Run the local app.\n8. Inspect mobile first, then desktop, in a real browser; run the five-second rule and check mobile LCP.\n9. Fix the biggest clarity/speed problems, then the most visible visual ones.\n10. Run \`npm run check\` in site/ and fix every error.\n11. Leave a short note in qa/RESULT.md.\n12. Stop when it is polished enough to demo; do not gold-plate.\n`;
 }
 
 function isErrnoException(error: Error | undefined): error is NodeJS.ErrnoException {
   return error !== undefined && "code" in error;
 }
 
-function listPatterns(root: string): string {
-  const dir = join(root, "patterns");
+function listPatterns(): string {
+  const dir = join(ROOT, "patterns");
   if (!existsSync(dir)) return "(none)";
   return (
     readdirSync(dir, { withFileTypes: true })
@@ -351,10 +415,9 @@ function listPatterns(root: string): string {
   );
 }
 
-function build(slugInput: string): void {
-  const slug = slugify(slugInput);
-  const dir = prototypeDir(slug);
-  const prompt = buildPrompt(slug);
+function build(ws: Workspace): void {
+  const dir = requirePrototype(ws);
+  const prompt = buildPrompt(ws, dir);
   writeFileSync(
     join(dir, "BUILD_PROMPT.md"),
     `# Claude Code build prompt\n\n\`\`\`text\n${prompt}\n\`\`\`\n`,
@@ -378,10 +441,8 @@ function build(slugInput: string): void {
   if (result.status !== 0) throw new Error(`Claude Code exited with status ${result.status}`);
 }
 
-function review(slugInput: string): void {
-  const slug = slugify(slugInput);
-  const dir = prototypeDir(slug);
-  if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
+function review(ws: Workspace): void {
+  const dir = requirePrototype(ws);
   const resultPath = join(dir, "qa/RESULT.md");
   const existing = existsSync(resultPath) ? readFileSync(resultPath, "utf8") : "";
   const content = `# Visual QA\n\nGenerated: ${new Date().toISOString()}\n\n## Checklist\n\n- [ ] Desktop screenshot reviewed\n- [ ] Mobile screenshot reviewed\n- [ ] Five-second rule passes on mobile\n- [ ] Hero hierarchy is clear\n- [ ] Mobile LCP within budget\n- [ ] Native scroll + keyboard intact\n- [ ] Motion is purposeful\n- [ ] 3D/video does not overpower content\n- [ ] CTA is discoverable\n- [ ] No visible overflow\n- [ ] Reduced-motion fallback exists\n- [ ] Console is clean\n- [ ] Asset sizes are reasonable\n\n${existing}`;
@@ -389,10 +450,8 @@ function review(slugInput: string): void {
   console.log(`QA checklist refreshed: ${resultPath}`);
 }
 
-function publish(slugInput: string): void {
-  const slug = slugify(slugInput);
-  const dir = prototypeDir(slug);
-  if (!existsSync(dir)) throw new Error(`Unknown prototype: ${slug}`);
+function publish(ws: Workspace): void {
+  const dir = requirePrototype(ws);
   const vercel = spawnSync("vercel", ["--yes"], { cwd: dir, stdio: "inherit", shell: false });
   if (isErrnoException(vercel.error) && vercel.error.code === "ENOENT") {
     console.log(`Vercel CLI not found. Install it and run ` + `vercel --yes` + ` in ${dir}`);
@@ -401,19 +460,19 @@ function publish(slugInput: string): void {
   if (vercel.status !== 0) throw new Error(`Vercel exited with status ${vercel.status}`);
 }
 
-function extractPattern(slugInput: string, patternIdInput: string): void {
-  const slug = slugify(slugInput);
-  const patternId = slugify(patternIdInput);
-  const source = prototypeDir(slug);
-  if (!existsSync(source)) throw new Error(`Unknown prototype: ${slug}`);
-  const destination = join(engineRoot(), "patterns", patternId);
+function extractPattern(ws: Workspace, patternId: string): void {
+  if (!isName(patternId)) {
+    throw new Error(`"${patternId}" is not a valid pattern id. ${NAME_RULE}`);
+  }
+  const source = requirePrototype(ws);
+  const destination = join(ROOT, "patterns", patternId);
   if (existsSync(destination)) throw new Error(`Pattern already exists: ${patternId}`);
   mkdirSync(destination, { recursive: true });
   const sourceSpec = join(source, "EXPERIENCE.md");
   const body = existsSync(sourceSpec) ? readFileSync(sourceSpec, "utf8") : "";
   writeFileSync(
     join(destination, "PATTERN.md"),
-    `# ${patternId}\n\nExtracted from prototype: ${slug}\n\n## Source notes\n${body}\n\n## TODO\n- [ ] Make the pattern independent\n- [ ] Define inputs/variants\n- [ ] Document mobile behavior\n- [ ] Document performance expectations\n- [ ] Add a live demo\n- [ ] Add an agent recipe\n`,
+    `# ${patternId}\n\nExtracted from prototype: ${ws.slug}\n\n## Source notes\n${body}\n\n## TODO\n- [ ] Make the pattern independent\n- [ ] Define inputs/variants\n- [ ] Document mobile behavior\n- [ ] Document performance expectations\n- [ ] Add a live demo\n- [ ] Add an agent recipe\n`,
   );
   console.log(`Pattern created: ${destination}`);
 }
@@ -422,27 +481,30 @@ function main(): void {
   const [, , command, ...args] = process.argv;
   try {
     if (!command) usage();
+    const ws = ["new", "scaffold", "build", "review", "publish", "extract-pattern"].includes(
+      command,
+    )
+      ? workspace()
+      : usage();
     switch (command) {
       case "new":
-        newPrototype(args[0] ?? "", parseBrief(args), parseShell(args));
+        newPrototype(ws, parsePitch(args), parseShell(args));
         break;
       case "scaffold":
-        scaffold(args[0] ?? "", requireShell(args));
+        scaffold(ws, requireShell(args));
         break;
       case "build":
-        build(args[0] ?? "");
+        build(ws);
         break;
       case "review":
-        review(args[0] ?? "");
+        review(ws);
         break;
       case "publish":
-        publish(args[0] ?? "");
+        publish(ws);
         break;
       case "extract-pattern":
-        extractPattern(args[0] ?? "", args[1] ?? "");
+        extractPattern(ws, args[0] ?? "");
         break;
-      default:
-        usage();
     }
   } catch (error) {
     console.error(error instanceof Error ? error.message : error);
