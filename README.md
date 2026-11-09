@@ -29,7 +29,7 @@ Playwright for visual QA.
 Node 26 or newer is required. The engine is a Claude Code plugin from the studio marketplace. Run these in Claude Code:
 
 ```text
-/plugin marketplace add stubbornweb/studio
+/plugin marketplace add stubbornweb/solo-product-studio
 /plugin install prototype-engine@studio
 ```
 
