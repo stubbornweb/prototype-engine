@@ -4,10 +4,9 @@ This repository is an AI-assisted rapid web experience factory.
 
 ## Shared rules
 
-1. Work on a branch and open a pull request. Never push to `main`.
-2. Write a failing test first for any code with logic.
-3. Run `npm run check` and `npm test` before you open a pull request.
-4. Write all text in plain English (Simplified Technical English style, CEFR B1).
+1. Write a failing test first for any code with logic.
+2. Run `npm run check` and `npm test` before you open a pull request.
+3. Write all text in plain English (Simplified Technical English style, CEFR B1).
 
 Prototype sites have no unit tests. Check a prototype site in a real browser.
 
@@ -68,13 +67,3 @@ prototype → extract-pattern → clean recipe → registry → reuse
 ```
 
 Do not copy a reference site's identity. Extract the interaction/composition pattern and create an original implementation.
-
-## Agent skills
-
-### Issue tracker
-
-Issues live in GitHub Issues for `stubbornweb/prototype-engine` (`gh` CLI). See `docs/agents/issue-tracker.md`.
-
-### Domain docs
-
-Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
