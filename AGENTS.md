@@ -34,6 +34,8 @@ Only after the prototype proves useful or the user explicitly asks for productio
 7. `web-visual-qa` — inspect the rendered site
 8. `web-production` — only for client/production work
 
+A change that adds, renames or removes a skill, or changes its place in the flow, also needs a pull request in `stubbornweb/solo-product-studio` that updates `skills/ask-studio/SKILL.md`, the router over the skills of every engine (ADR 0008 there).
+
 ## Default technical policy
 
 See **[docs/stack-policy.md](docs/stack-policy.md)** — it is the single source
