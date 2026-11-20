@@ -7,6 +7,8 @@ description: Inspect the actual rendered website in a browser and iterate on vis
 
 Use Playwright when available.
 
+Before the first screenshot, write or update the feature map in `3-prototype/qa/FEATURES.md`. List each section and each interactive feature as the visitor sees it, one line each: a short name and how to reach it (URL, selector, or scroll position). Use these names in `qa/RESULT.md` and when you talk to the owner. The map is done when every section and every control on the page has a line.
+
 Review at minimum — mobile first:
 - mobile 390×844
 - desktop 1440×900
